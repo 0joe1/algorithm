@@ -17,13 +17,14 @@ void swap(int x,int y)
 void shiftdown(int i)
 {
     int lc,rc;
+    lc=rc=0;
 	int min=999;
 	while (i*2 < n)
 	{
 		int pos;
 		if (lchild(i) < n) lc=lchild(i);
 		if (rchild(i) < n) rc=rchild(i);
-		if (a[lc] <a[rc])
+		if (rc<lc || a[lc] <a[rc])
 		{
 			min = a[lc];
 			pos = lc;
@@ -75,8 +76,6 @@ int deletemin()
     return t;
 }
 
-
-
 int main(void)
 {
     scanf("%d",&n);
@@ -84,7 +83,9 @@ int main(void)
     for (int i=0;i<n;i++)
         scanf("%d",&a[i]);
     creat();
+    revheap();
 
+    n=num;
     for(int i=0;i<num;i++)
         printf("%d ",deletemin());
 	return 0;
