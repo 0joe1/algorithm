@@ -21,7 +21,7 @@
 #define INF 999999
 #define leftchild(a) (2*a+1)
 #define rightchild(a) (2*a+2)
-
+#define father(a) ((a-1)/2)
 
 int dis[10],book[10]={0};
 int h[10],pos[10],size;
@@ -52,7 +52,7 @@ void swap(int x,int y)
     pos[h[x]] = pos[h[y]];
     pos[h[y]] = t; 
 }
-void siftdown(int* h,int x)
+void siftdown(int x)
 {
     /*
      *get lc and rc
@@ -68,7 +68,7 @@ void siftdown(int* h,int x)
         int m;
         if (rc==-1)  m=lc;
         else
-            m=h[lc]>h[rc]?lc:rc;
+            m=h[dis[lc]]>h[dis[rc]]?lc:rc;
  
         /*
          if smaller
@@ -77,7 +77,7 @@ void siftdown(int* h,int x)
          else
             finish
          */
-        if (x > h[m])
+        if (dis[h[x]] > h[dis[m]])
         {
             swap(x,m);
             x = m;
@@ -85,7 +85,7 @@ void siftdown(int* h,int x)
         else break;
     }
 }
-void create(int* h,int size)
+void create(void)
 {
     for (int i=0;i<size;i++)    
     {
@@ -103,6 +103,20 @@ void create(int* h,int size)
     for (int k=size/2-1;k>=0;k--)
         siftdown(k);
 }
+void siftup(int x)
+{
+    int f=father(x);
+    
+    while (x > 0)
+    {
+        if (dis[h[x]] > dis[h[f]])
+            break;
+        swap(f,x);
+        x=f;
+        f=father(x);
+    }
+}
+
 int pop()
 {
     int t=h[0];
@@ -118,7 +132,7 @@ int pop()
 int main(void)
 {
     int n,m;
-    int u[10],v[10],w[10],first[6],next[10];
+    int u[20],v[20],w[20],first[6],next[20];
     scanf("%d %d",&n,&m);
     size=n;
 
@@ -126,9 +140,11 @@ int main(void)
         first[i]=-1;
     for (int i=0;i<m;i++)
     {
-        scanf("%d %d %d",&u[m],&v[m],&w[m]);
-        next[i] = first[u[i]];
-        first[u[i]]=i;
+        scanf("%d %d %d",&u[i],&v[i],&w[i]);
+    }
+    for (int i=0;i<m;i++)
+    {
+
     }
 
     dis[0]=0;
@@ -142,17 +158,26 @@ int main(void)
     }
     book[0]=1;
     
+    create();
+    pop();
+
     int cost=0;
     for (int i=0;i<n-1;i++)
     {
-        int nu;
-        nu=gtnu(dis,book,n);
+        int nu=pop();
         book[nu]=1;
         cost += dis[nu];
-        for (int j=0;j<n;j++)
+
+        int e=first[nu];
+        while (e != -1)
         {
-            if (!book[j] && dis[j]>e[nu][j])
-                dis[j]=e[nu][j];
+            if (!book[v[e]] && dis[v[e]]>w[e])
+            {  
+                dis[v[e]]=w[e];
+                siftup(pos[v[e]]);
+            }
+
+            e=next[e];
         }
     }
     printf("%d",cost);
