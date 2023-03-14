@@ -68,7 +68,7 @@ void siftdown(int x)
         int m;
         if (rc==-1)  m=lc;
         else
-            m=h[dis[lc]]>h[dis[rc]]?lc:rc;
+            m=dis[h[lc]]<dis[h[rc]]?lc:rc;
  
         /*
          if smaller
@@ -77,7 +77,7 @@ void siftdown(int x)
          else
             finish
          */
-        if (dis[h[x]] > h[dis[m]])
+        if (dis[h[x]] > dis[h[m]])
         {
             swap(x,m);
             x = m;
@@ -136,15 +136,20 @@ int main(void)
     scanf("%d %d",&n,&m);
     size=n;
 
+    for (int i=0;i<m;i++)
+        scanf("%d %d %d",&u[i],&v[i],&w[i]);
+    for (int i=m;i<2*m;i++)
+    {
+        u[i]=v[i-m];
+        v[i]=u[i-m];
+        w[i]=w[i-m];
+    }
     for (int i=0;i<n;i++)
         first[i]=-1;
-    for (int i=0;i<m;i++)
+    for (int i=0;i<2*m;i++)
     {
-        scanf("%d %d %d",&u[i],&v[i],&w[i]);
-    }
-    for (int i=0;i<m;i++)
-    {
-
+        next[i]=first[u[i]];
+        first[u[i]]=i;
     }
 
     dis[0]=0;
