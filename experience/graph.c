@@ -54,10 +54,18 @@ int** nmgraph(int n,int m,int** input,int* returnColsize )
     for (int i=0;i<m;i++)
     {
         int from=input[i][0],to=input[i][1];
-        ret[from][returnColsize[to]++]=to;
+        ret[from][returnColsize[i]++]=to;
     }
 
     return ret;
+}
+int nmnext(int** nmgraph,int p,int *Colsize )
+{
+    if (Colsize[p]==0)
+        return 0;
+    for (int i=0;i<Colsize[p];i++)
+        printf("%d ",nmgraph[p][i]);
+    return 1;
 }
 void output_nmgraph(int n,int** nmgraph,int *returnColsize)
 {
@@ -90,7 +98,8 @@ int main(void)
     //plan B
     int* returnColsize=(int*)malloc(sizeof(int)*n);
     int** graph=nmgraph(n,m,input,returnColsize);
-    output_nmgraph(n,graph,returnColsize);
+    nmnext(graph,1,returnColsize);
+    //output_nmgraph(n,graph,returnColsize);
 
     return 0;
 }
